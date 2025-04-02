@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Container, Form, Button, Row, Col, Alert } from 'react-bootstrap';
 import { useRouter } from 'next/navigation';
+import { FaGraduationCap, FaUser, FaLock } from 'react-icons/fa';
 
 export default function Login() {
   const router = useRouter();
@@ -12,10 +13,15 @@ export default function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (email === 'admin@office.com' && password === 'admin123') {
-      router.push('/office');
+    // University-specific credentials
+    if (email === 'student@university.edu' && password === 'student123') {
+      router.push('/university');
+    } else if (email === 'professor@university.edu' && password === 'professor123') {
+      router.push('/university');
+    } else if (email === 'admin@university.edu' && password === 'admin123') {
+      router.push('/university');
     } else {
-      setError('Invalid credentials');
+      setError('Invalid credentials. Please try again.');
     }
   };
 
@@ -28,8 +34,9 @@ export default function Login() {
               <div className="login-bubble">
                 <div className="bubble-content">
                   <div className="text-center mb-4">
-                    <h2>Welcome Back</h2>
-                    <p className="text-muted">Sign in to continue to your office</p>
+                    <FaGraduationCap size={48} className="mb-3 text-primary" />
+                    <h2>University Knowledge Center</h2>
+                    <p className="text-muted">Sign in to access your educational portal</p>
                   </div>
 
                   {error && (
@@ -40,11 +47,13 @@ export default function Login() {
 
                   <Form onSubmit={handleSubmit}>
                     <Form.Group className="mb-4">
-                      <Form.Label>Email address</Form.Label>
+                      <Form.Label>
+                        <FaUser className="me-2" /> Email address
+                      </Form.Label>
                       <Form.Control
                         type="email"
                         name="email"
-                        placeholder="Enter your email"
+                        placeholder="Enter your university email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         required
@@ -53,7 +62,9 @@ export default function Login() {
                     </Form.Group>
 
                     <Form.Group className="mb-4">
-                      <Form.Label>Password</Form.Label>
+                      <Form.Label>
+                        <FaLock className="me-2" /> Password
+                      </Form.Label>
                       <Form.Control
                         type="password"
                         name="password"
@@ -81,6 +92,26 @@ export default function Login() {
                       Sign In
                     </Button>
                   </Form>
+
+                  <div className="text-center mt-4">
+                    <p className="mb-2">Need help?</p>
+                    <Button variant="link" className="text-decoration-none">
+                      Forgot Password?
+                    </Button>
+                    <span className="mx-2">|</span>
+                    <Button variant="link" className="text-decoration-none">
+                      Contact Support
+                    </Button>
+                  </div>
+
+                  <div className="mt-4 text-center">
+                    <p className="text-muted small">
+                      Test Credentials:<br />
+                      Student: student@university.edu / student123<br />
+                      Professor: professor@university.edu / professor123<br />
+                      Admin: admin@university.edu / admin123
+                    </p>
+                  </div>
                 </div>
               </div>
             </Col>

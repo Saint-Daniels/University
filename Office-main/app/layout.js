@@ -6,12 +6,12 @@ import BootstrapClient from './components/BootstrapClient'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
-  title: 'Office Dashboard',
-  description: 'Modern office management system',
-  keywords: 'office dashboard, workspace management, professional tools',
+  title: 'University Knowledge Center',
+  description: 'Modern university knowledge management system',
+  keywords: 'university dashboard, knowledge center, education management, learning platform',
   openGraph: {
-    title: 'Office Dashboard',
-    description: 'Professional office dashboard for managing your workspace.',
+    title: 'University Knowledge Center',
+    description: 'Comprehensive knowledge management system for university operations.',
     type: 'website',
   },
 }

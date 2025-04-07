@@ -1,0 +1,45 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-serif: var(--font-crimson);
+}
+
+@layer base {
+  h1, h2, h3 {
+    font-family: var(--font-serif);
+  }
+}
+
+@layer components {
+  .academic-card {
+    @apply bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow duration-200;
+  }
+  
+  .academic-header {
+    @apply text-2xl font-serif text-gray-900 mb-4;
+  }
+  
+  .university-button {
+    @apply bg-blue-900 text-white py-2 px-4 rounded-md hover:bg-blue-800 transition-colors duration-200 font-semibold;
+  }
+}
+
+/* Custom scrollbar for a more refined look */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+} 

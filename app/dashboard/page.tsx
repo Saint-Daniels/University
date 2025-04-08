@@ -707,7 +707,7 @@ export default function Dashboard() {
             {/* Header Section with Day Navigation */}
             <div className="bg-white rounded-xl shadow-lg p-6">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-2xl font-serif text-gray-900">Today's Classes</h2>
+                <h2 className="text-2xl font-serif text-gray-900">Today's Schedule</h2>
                 <div className="flex items-center space-x-4">
                   <div className="flex items-center space-x-2">
                     <button className="px-3 py-1 bg-blue-100 text-blue-900 rounded-full text-sm font-medium hover:bg-blue-200">
@@ -728,201 +728,106 @@ export default function Dashboard() {
               </div>
             </div>
 
-            {/* Class Cards Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {/* Data Analysis Card */}
-              <div className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-200">
-                <div className="bg-gradient-to-r from-blue-600 to-blue-800 p-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center">
-                      <i className="fas fa-chart-line text-white text-2xl"></i>
-                    </div>
-                    <span className="px-3 py-1 bg-white/20 text-white rounded-full text-sm">8:00 AM</span>
-                  </div>
-                  <h3 className="text-xl font-serif text-white mb-2">Data Analysis & Statistics</h3>
-                  <p className="text-blue-100">Room 302</p>
+            {/* Schedule Views */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* A Day Schedule */}
+              <div className="bg-white rounded-xl shadow-lg p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-xl font-serif text-gray-900">A Day Schedule</h3>
+                  <span className="px-3 py-1 bg-blue-100 text-blue-900 rounded-full text-sm font-medium">Current Day</span>
                 </div>
-                <div className="p-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center space-x-2">
-                      <i className="fas fa-clock text-gray-400"></i>
-                      <span className="text-sm text-gray-600">2 hours</span>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <i className="fas fa-user text-gray-400"></i>
-                      <span className="text-sm text-gray-600">Prof. Smith</span>
-                    </div>
-                  </div>
-                  <p className="text-gray-600 mb-4">Advanced statistical analysis and data interpretation techniques for business decision making.</p>
-                  <div className="flex items-center justify-between">
-                    <button className="px-4 py-2 bg-blue-50 text-blue-900 rounded-lg hover:bg-blue-100">
-                      View Materials
-                    </button>
-                    <button className="px-4 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-800">
-                      Join Class
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              {/* Business Analytics Card */}
-              <div className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-200">
-                <div className="bg-gradient-to-r from-green-600 to-green-800 p-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center">
-                      <i className="fas fa-briefcase text-white text-2xl"></i>
-                    </div>
-                    <span className="px-3 py-1 bg-white/20 text-white rounded-full text-sm">10:00 AM</span>
-                  </div>
-                  <h3 className="text-xl font-serif text-white mb-2">Business Analytics</h3>
-                  <p className="text-green-100">Room 405</p>
-                </div>
-                <div className="p-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center space-x-2">
-                      <i className="fas fa-clock text-gray-400"></i>
-                      <span className="text-sm text-gray-600">2 hours</span>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <i className="fas fa-user text-gray-400"></i>
-                      <span className="text-sm text-gray-600">Dr. Johnson</span>
-                    </div>
-                  </div>
-                  <p className="text-gray-600 mb-4">Strategic business analytics and data-driven decision making for modern enterprises.</p>
-                  <div className="flex items-center justify-between">
-                    <button className="px-4 py-2 bg-green-50 text-green-900 rounded-lg hover:bg-green-100">
-                      View Materials
-                    </button>
-                    <button className="px-4 py-2 bg-green-900 text-white rounded-lg hover:bg-green-800">
-                      Join Class
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              {/* Lab Session Card */}
-              <div className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-200">
-                <div className="bg-gradient-to-r from-purple-600 to-purple-800 p-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center">
-                      <i className="fas fa-flask text-white text-2xl"></i>
-                    </div>
-                    <span className="px-3 py-1 bg-white/20 text-white rounded-full text-sm">2:00 PM</span>
-                  </div>
-                  <h3 className="text-xl font-serif text-white mb-2">Lab Session</h3>
-                  <p className="text-purple-100">Computer Lab</p>
-                </div>
-                <div className="p-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center space-x-2">
-                      <i className="fas fa-clock text-gray-400"></i>
-                      <span className="text-sm text-gray-600">2 hours</span>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <i className="fas fa-user text-gray-400"></i>
-                      <span className="text-sm text-gray-600">TA Williams</span>
-                    </div>
-                  </div>
-                  <p className="text-gray-600 mb-4">Hands-on practical session for implementing data analysis techniques and tools.</p>
-                  <div className="flex items-center justify-between">
-                    <button className="px-4 py-2 bg-purple-50 text-purple-900 rounded-lg hover:bg-purple-100">
-                      View Materials
-                    </button>
-                    <button className="px-4 py-2 bg-purple-900 text-white rounded-lg hover:bg-purple-800">
-                      Join Lab
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Course Marketplace Section */}
-            <div className="bg-white rounded-xl shadow-lg p-6 mt-6">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-serif text-gray-900">Course Marketplace</h2>
-                <div className="flex items-center space-x-4">
-                  <input
-                    type="text"
-                    placeholder="Search courses..."
-                    className="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                  <select className="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <option value="">All Categories</option>
-                    <option value="business">Business</option>
-                    <option value="technology">Technology</option>
-                    <option value="science">Science</option>
-                    <option value="arts">Arts</option>
-                  </select>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {/* Featured Course 1 */}
-                <div className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-200">
-                  <div className="relative h-48 bg-gradient-to-r from-blue-500 to-blue-700">
-                    <div className="absolute top-2 right-2">
-                      <span className="px-2 py-1 bg-white/20 text-white rounded-full text-xs">Featured</span>
-                    </div>
-                  </div>
-                  <div className="p-6">
-                    <h3 className="text-xl font-serif text-gray-900 mb-2">Advanced Machine Learning</h3>
-                    <p className="text-gray-600 mb-4">Master advanced ML algorithms and their applications in real-world scenarios.</p>
+                <div className="space-y-4">
+                  <div className="border-l-4 border-blue-500 pl-4">
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center">
-                        <i className="fas fa-star text-yellow-400 mr-1"></i>
-                        <span className="text-sm text-gray-600">4.8 (120 reviews)</span>
-                      </div>
-                      <span className="text-lg font-medium text-gray-900">$299.99</span>
+                      <span className="text-sm text-gray-600">8:00 AM - 10:00 AM</span>
+                      <span className="px-2 py-1 bg-blue-50 text-blue-900 rounded-full text-xs">Room 302</span>
                     </div>
-                    <button className="w-full mt-4 px-4 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-800">
-                      Enroll Now
-                    </button>
+                    <h4 className="text-lg font-medium text-gray-900">Data Analysis & Statistics</h4>
+                    <p className="text-sm text-gray-600">Prof. Smith</p>
+                  </div>
+                  <div className="border-l-4 border-green-500 pl-4">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600">10:00 AM - 12:00 PM</span>
+                      <span className="px-2 py-1 bg-green-50 text-green-900 rounded-full text-xs">Room 405</span>
+                    </div>
+                    <h4 className="text-lg font-medium text-gray-900">Business Analytics</h4>
+                    <p className="text-sm text-gray-600">Dr. Johnson</p>
+                  </div>
+                  <div className="border-l-4 border-purple-500 pl-4">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600">2:00 PM - 4:00 PM</span>
+                      <span className="px-2 py-1 bg-purple-50 text-purple-900 rounded-full text-xs">Computer Lab</span>
+                    </div>
+                    <h4 className="text-lg font-medium text-gray-900">Lab Session</h4>
+                    <p className="text-sm text-gray-600">TA Williams</p>
                   </div>
                 </div>
+              </div>
 
-                {/* Featured Course 2 */}
-                <div className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-200">
-                  <div className="relative h-48 bg-gradient-to-r from-green-500 to-green-700">
-                    <div className="absolute top-2 right-2">
-                      <span className="px-2 py-1 bg-white/20 text-white rounded-full text-xs">New</span>
-                    </div>
-                  </div>
-                  <div className="p-6">
-                    <h3 className="text-xl font-serif text-gray-900 mb-2">Cloud Architecture</h3>
-                    <p className="text-gray-600 mb-4">Learn to design and implement scalable cloud solutions using AWS and Azure.</p>
+              {/* B Day Schedule */}
+              <div className="bg-white rounded-xl shadow-lg p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-xl font-serif text-gray-900">B Day Schedule</h3>
+                  <span className="px-3 py-1 bg-gray-100 text-gray-900 rounded-full text-sm font-medium">Next Day</span>
+                </div>
+                <div className="space-y-4">
+                  <div className="border-l-4 border-red-500 pl-4">
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center">
-                        <i className="fas fa-star text-yellow-400 mr-1"></i>
-                        <span className="text-sm text-gray-600">4.9 (95 reviews)</span>
-                      </div>
-                      <span className="text-lg font-medium text-gray-900">$249.99</span>
+                      <span className="text-sm text-gray-600">8:00 AM - 10:00 AM</span>
+                      <span className="px-2 py-1 bg-red-50 text-red-900 rounded-full text-xs">Room 201</span>
                     </div>
-                    <button className="w-full mt-4 px-4 py-2 bg-green-900 text-white rounded-lg hover:bg-green-800">
-                      Enroll Now
-                    </button>
+                    <h4 className="text-lg font-medium text-gray-900">Actuarial Sciences</h4>
+                    <p className="text-sm text-gray-600">Prof. Davis</p>
+                  </div>
+                  <div className="border-l-4 border-yellow-500 pl-4">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600">10:00 AM - 12:00 PM</span>
+                      <span className="px-2 py-1 bg-yellow-50 text-yellow-900 rounded-full text-xs">Room 303</span>
+                    </div>
+                    <h4 className="text-lg font-medium text-gray-900">Financial Modeling</h4>
+                    <p className="text-sm text-gray-600">Dr. Thompson</p>
+                  </div>
+                  <div className="border-l-4 border-indigo-500 pl-4">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600">2:00 PM - 4:00 PM</span>
+                      <span className="px-2 py-1 bg-indigo-50 text-indigo-900 rounded-full text-xs">Room 401</span>
+                    </div>
+                    <h4 className="text-lg font-medium text-gray-900">Risk Management</h4>
+                    <p className="text-sm text-gray-600">Prof. Wilson</p>
                   </div>
                 </div>
+              </div>
 
-                {/* Featured Course 3 */}
-                <div className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-200">
-                  <div className="relative h-48 bg-gradient-to-r from-purple-500 to-purple-700">
-                    <div className="absolute top-2 right-2">
-                      <span className="px-2 py-1 bg-white/20 text-white rounded-full text-xs">Popular</span>
-                    </div>
-                  </div>
-                  <div className="p-6">
-                    <h3 className="text-xl font-serif text-gray-900 mb-2">Data Science Bootcamp</h3>
-                    <p className="text-gray-600 mb-4">Comprehensive training in data science, from basics to advanced techniques.</p>
+              {/* C Day Schedule */}
+              <div className="bg-white rounded-xl shadow-lg p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-xl font-serif text-gray-900">C Day Schedule</h3>
+                  <span className="px-3 py-1 bg-gray-100 text-gray-900 rounded-full text-sm font-medium">Following Day</span>
+                </div>
+                <div className="space-y-4">
+                  <div className="border-l-4 border-pink-500 pl-4">
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center">
-                        <i className="fas fa-star text-yellow-400 mr-1"></i>
-                        <span className="text-sm text-gray-600">4.7 (150 reviews)</span>
-                      </div>
-                      <span className="text-lg font-medium text-gray-900">$349.99</span>
+                      <span className="text-sm text-gray-600">8:00 AM - 10:00 AM</span>
+                      <span className="px-2 py-1 bg-pink-50 text-pink-900 rounded-full text-xs">Room 202</span>
                     </div>
-                    <button className="w-full mt-4 px-4 py-2 bg-purple-900 text-white rounded-lg hover:bg-purple-800">
-                      Enroll Now
-                    </button>
+                    <h4 className="text-lg font-medium text-gray-900">Microsoft Office Professional</h4>
+                    <p className="text-sm text-gray-600">Prof. Brown</p>
+                  </div>
+                  <div className="border-l-4 border-teal-500 pl-4">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600">10:00 AM - 12:00 PM</span>
+                      <span className="px-2 py-1 bg-teal-50 text-teal-900 rounded-full text-xs">Room 304</span>
+                    </div>
+                    <h4 className="text-lg font-medium text-gray-900">Advanced Excel</h4>
+                    <p className="text-sm text-gray-600">Dr. Martinez</p>
+                  </div>
+                  <div className="border-l-4 border-orange-500 pl-4">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600">2:00 PM - 4:00 PM</span>
+                      <span className="px-2 py-1 bg-orange-50 text-orange-900 rounded-full text-xs">Computer Lab</span>
+                    </div>
+                    <h4 className="text-lg font-medium text-gray-900">Practical Applications</h4>
+                    <p className="text-sm text-gray-600">TA Rodriguez</p>
                   </div>
                 </div>
               </div>

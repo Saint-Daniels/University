@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 
 interface CourseCategory {
@@ -84,12 +84,33 @@ const categories: CourseCategory[] = [
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState('dashboard');
+  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && buttonRef.current &&
+          !dropdownRef.current.contains(event.target as Node) &&
+          !buttonRef.current.contains(event.target as Node)) {
+        setIsProfileDropdownOpen(false);
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const navigationTabs = [
     { id: 'dashboard', label: 'Dashboard', icon: 'fas fa-th-large' },
-    { id: 'classrooms', label: 'Classrooms', icon: 'fas fa-chalkboard-teacher' },
+    { id: 'campus', label: 'Campus', icon: 'fas fa-chalkboard-teacher' },
+    { id: 'courses', label: 'Courses', icon: 'fas fa-book' },
     { id: 'library', label: 'Library', icon: 'fas fa-book-reader' },
-    { id: 'ai', label: 'AI Assistant', icon: 'fas fa-robot' }
+    { id: 'ai', label: 'AI Assistant', icon: 'fas fa-robot' },
+    { id: 'resume', label: 'Resume', icon: 'fas fa-file-alt' },
+    { id: 'agenda', label: 'Agenda', icon: 'fas fa-calendar-alt' }
   ];
 
   return (
@@ -105,9 +126,48 @@ export default function Dashboard() {
               </div>
               <div className="flex items-center space-x-4">
                 <span className="text-sm">Welcome, Student</span>
-                <button className="bg-blue-800 p-2 rounded-full">
-                  <i className="fas fa-user"></i>
-                </button>
+                <div className="relative">
+                  <button 
+                    ref={buttonRef}
+                    className="bg-blue-800 p-2 rounded-full hover:bg-blue-700 transition-colors duration-200"
+                    onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
+                  >
+                    <i className="fas fa-user"></i>
+                  </button>
+                  {/* Profile Dropdown Menu */}
+                  <div 
+                    ref={dropdownRef}
+                    className={`${isProfileDropdownOpen ? 'block' : 'hidden'} absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl py-2 z-50`}
+                  >
+                    <div className="px-4 py-2 border-b border-gray-200">
+                      <p className="text-sm font-medium text-gray-900">John Student</p>
+                      <p className="text-xs text-gray-500">john.student@university.edu</p>
+                    </div>
+                    <div className="py-1">
+                      <a href="#" className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-900">
+                        <i className="fas fa-wallet w-5 text-blue-900"></i>
+                        <span>Connect Crypto Wallet</span>
+                      </a>
+                      <a href="#" className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-900">
+                        <i className="fas fa-credit-card w-5 text-blue-900"></i>
+                        <span>Billing & Payments</span>
+                      </a>
+                      <a href="#" className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-900">
+                        <i className="fas fa-envelope w-5 text-blue-900"></i>
+                        <span>Messaging Settings</span>
+                      </a>
+                      <a href="#" className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-900">
+                        <i className="fas fa-shield-alt w-5 text-blue-900"></i>
+                        <span>Privacy Settings</span>
+                      </a>
+                      <div className="border-t border-gray-200 my-1"></div>
+                      <a href="#" className="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+                        <i className="fas fa-sign-out-alt w-5"></i>
+                        <span>Logout</span>
+                      </a>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -146,7 +206,7 @@ export default function Dashboard() {
             {/* Top Section: Profile + Calendar */}
             <div className="flex gap-6 mb-8">
               {/* Left Column - Profile Section */}
-              <div className="w-1/3 bg-white rounded-lg shadow-lg p-6">
+              <div className="w-1/3 bg-white rounded-xl shadow-lg p-6">
                 <div className="text-center mb-6">
                   <div className="w-32 h-32 mx-auto bg-blue-100 rounded-full overflow-hidden mb-4">
                     <img 
@@ -193,6 +253,72 @@ export default function Dashboard() {
                   </div>
                 </div>
 
+                {/* Earned Badges */}
+                <div className="mt-6">
+                  <h3 className="text-sm font-medium text-gray-900 mb-3">Earned Badges</h3>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="bg-blue-50 rounded-lg p-3 flex items-center">
+                      <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
+                        <i className="fas fa-certificate text-blue-900"></i>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium">Data Science Expert</p>
+                        <p className="text-xs text-gray-600">Earned Mar 2024</p>
+                      </div>
+                    </div>
+                    <div className="bg-green-50 rounded-lg p-3 flex items-center">
+                      <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mr-3">
+                        <i className="fas fa-cloud text-green-900"></i>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium">Cloud Architect</p>
+                        <p className="text-xs text-gray-600">Earned Feb 2024</p>
+                      </div>
+                    </div>
+                    <div className="bg-yellow-50 rounded-lg p-3 flex items-center">
+                      <div className="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center mr-3">
+                        <i className="fas fa-trophy text-yellow-900"></i>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium">Hackathon Champion</p>
+                        <p className="text-xs text-gray-600">Earned Spring 2024</p>
+                      </div>
+                    </div>
+                    <div className="bg-purple-50 rounded-lg p-3 flex items-center">
+                      <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center mr-3">
+                        <i className="fas fa-code text-purple-900"></i>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium">Algorithm Master</p>
+                        <p className="text-xs text-gray-600">Earned Winter 2024</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Recent Achievements */}
+                <div className="mt-6">
+                  <h3 className="text-sm font-medium text-gray-900 mb-3">Recent Achievements</h3>
+                  <div className="space-y-3">
+                    <div className="flex items-center text-sm text-gray-600">
+                      <i className="fas fa-check-circle text-green-500 mr-2"></i>
+                      <span>Completed Advanced Data Analysis Course</span>
+                    </div>
+                    <div className="flex items-center text-sm text-gray-600">
+                      <i className="fas fa-check-circle text-green-500 mr-2"></i>
+                      <span>Earned AWS Solutions Architect Certification</span>
+                    </div>
+                    <div className="flex items-center text-sm text-gray-600">
+                      <i className="fas fa-check-circle text-green-500 mr-2"></i>
+                      <span>Won University Hackathon 2024</span>
+                    </div>
+                    <div className="flex items-center text-sm text-gray-600">
+                      <i className="fas fa-check-circle text-green-500 mr-2"></i>
+                      <span>Published Research Paper on AI in Education</span>
+                    </div>
+                  </div>
+                </div>
+
                 {/* Mood */}
                 <div className="mt-6">
                   <div className="flex items-center justify-between mb-2">
@@ -205,10 +331,32 @@ export default function Dashboard() {
                     className="w-full px-3 py-2 border border-gray-200 rounded-md text-sm"
                   />
                 </div>
+
+                {/* Contact and Mailbox Buttons */}
+                <div className="mt-6 grid grid-cols-2 gap-4">
+                  <button className="flex items-center justify-center p-3 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors duration-200">
+                    <div className="flex items-center">
+                      <i className="fas fa-address-book text-blue-900 text-xl mr-3"></i>
+                      <div className="text-left">
+                        <p className="text-sm font-medium text-gray-900">Contact Book</p>
+                        <p className="text-xs text-gray-500">156 contacts</p>
+                      </div>
+                    </div>
+                  </button>
+                  <button className="flex items-center justify-center p-3 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors duration-200">
+                    <div className="flex items-center">
+                      <i className="fas fa-envelope text-blue-900 text-xl mr-3"></i>
+                      <div className="text-left">
+                        <p className="text-sm font-medium text-gray-900">Mailbox</p>
+                        <p className="text-xs text-gray-500">3 new messages</p>
+                      </div>
+                    </div>
+                  </button>
+                </div>
               </div>
 
-              {/* Right Column - Calendar (Existing Calendar Code) */}
-              <div className="w-2/3 bg-white rounded-lg shadow-lg p-6">
+              {/* Right Column - Calendar */}
+              <div className="w-2/3 bg-white rounded-xl shadow-lg p-6">
                 {/* Academic Calendar */}
                 <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
                   <div className="flex items-center justify-between mb-6">
@@ -343,496 +491,341 @@ export default function Dashboard() {
                 </div>
               </div>
             </div>
-
-            {/* MySpace-style Sections Below */}
-            <div className="grid grid-cols-2 gap-6">
-              {/* About Me */}
-              <div className="bg-white rounded-lg shadow-lg p-6">
-                <h3 className="text-xl font-serif text-gray-900 mb-4">About Me</h3>
-                <div className="prose prose-sm">
-                  <p>Hey there! I'm passionate about technology and learning new things. Currently focusing on AI and Machine Learning courses.</p>
-                  <div className="mt-4">
-                    <h4 className="font-medium">Interests:</h4>
-                    <ul className="list-disc list-inside">
-                      <li>Artificial Intelligence</li>
-                      <li>Web Development</li>
-                      <li>Data Science</li>
-                      <li>Mobile App Development</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-              {/* Blog Posts */}
-              <div className="bg-white rounded-lg shadow-lg p-6">
-                <h3 className="text-xl font-serif text-gray-900 mb-4">Recent Blog Posts</h3>
-                <div className="space-y-4">
-                  <div className="border-b border-gray-200 pb-4">
-                    <h4 className="font-medium">My Journey in Machine Learning</h4>
-                    <p className="text-sm text-gray-600 mt-1">Just completed my first neural network project!</p>
-                    <div className="flex items-center text-xs text-gray-500 mt-2">
-                      <i className="fas fa-clock mr-1"></i>
-                      <span>Posted 2 days ago</span>
-                      <span className="mx-2">•</span>
-                      <i className="fas fa-comment mr-1"></i>
-                      <span>5 comments</span>
-                    </div>
-                  </div>
-                  <div className="border-b border-gray-200 pb-4">
-                    <h4 className="font-medium">Study Group Meetup</h4>
-                    <p className="text-sm text-gray-600 mt-1">Looking for study buddies for the upcoming exams!</p>
-                    <div className="flex items-center text-xs text-gray-500 mt-2">
-                      <i className="fas fa-clock mr-1"></i>
-                      <span>Posted 4 days ago</span>
-                      <span className="mx-2">•</span>
-                      <i className="fas fa-comment mr-1"></i>
-                      <span>8 comments</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Friends */}
-              <div className="bg-white rounded-lg shadow-lg p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-xl font-serif text-gray-900">Friends</h3>
-                  <button className="text-sm text-blue-900 hover:text-blue-700">View All</button>
-                </div>
-                <div className="grid grid-cols-3 gap-4">
-                  {[1, 2, 3, 4, 5, 6].map((friend) => (
-                    <div key={friend} className="text-center">
-                      <div className="w-16 h-16 mx-auto bg-blue-100 rounded-full overflow-hidden mb-2">
-                        <img 
-                          src={`/images/friends/friend-${friend}.jpg`}
-                          alt={`Friend ${friend}`}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                      <p className="text-xs font-medium truncate">Friend Name</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Comments */}
-              <div className="bg-white rounded-lg shadow-lg p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-xl font-serif text-gray-900">Comments</h3>
-                  <button className="text-sm text-blue-900 hover:text-blue-700">Leave a Comment</button>
-                </div>
-                <div className="space-y-4">
-                  <div className="flex items-start space-x-3">
-                    <div className="w-10 h-10 bg-blue-100 rounded-full flex-shrink-0">
-                      <img src="/images/friends/friend-1.jpg" alt="" className="w-full h-full object-cover rounded-full" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium">Sarah K.</p>
-                      <p className="text-sm text-gray-600">Great presentation in class today!</p>
-                      <div className="flex items-center text-xs text-gray-500 mt-1">
-                        <span>2 hours ago</span>
-                        <span className="mx-2">•</span>
-                        <button className="text-blue-900 hover:text-blue-700">Reply</button>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <div className="w-10 h-10 bg-blue-100 rounded-full flex-shrink-0">
-                      <img src="/images/friends/friend-2.jpg" alt="" className="w-full h-full object-cover rounded-full" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium">Mike R.</p>
-                      <p className="text-sm text-gray-600">Thanks for helping with the project!</p>
-                      <div className="flex items-center text-xs text-gray-500 mt-1">
-                        <span>1 day ago</span>
-                        <span className="mx-2">•</span>
-                        <button className="text-blue-900 hover:text-blue-700">Reply</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
           </>
         )}
 
-        {activeTab === 'classrooms' && (
+        {activeTab === 'campus' && (
           <div className="space-y-6">
-            {/* Practice Center */}
-            <div className="bg-white rounded-lg shadow-lg p-6">
-              <h2 className="text-2xl font-serif text-gray-900 mb-6">Practice Center</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Practice Tests */}
-                <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-6">
-                  <div className="flex items-start mb-4">
-                    <div className="w-12 h-12 bg-blue-900 rounded-lg flex items-center justify-center">
-                      <i className="fas fa-tasks text-2xl text-white"></i>
-                    </div>
-                    <div className="ml-4">
-                      <h3 className="text-lg font-semibold">Practice Tests</h3>
-                      <p className="text-sm text-gray-600">Timed assessments and mock exams</p>
-                    </div>
-                  </div>
-                  <div className="space-y-3 mt-4">
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm text-gray-600">Available Tests</span>
-                      <span className="text-sm font-medium text-blue-900">15</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm text-gray-600">Completed</span>
-                      <span className="text-sm font-medium text-blue-900">8</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm text-gray-600">Average Score</span>
-                      <span className="text-sm font-medium text-blue-900">85%</span>
-                    </div>
-                  </div>
-                  <div className="mt-6 space-y-2">
-                    <button className="w-full bg-blue-900 text-white py-2 px-4 rounded-md hover:bg-blue-800 transition-colors duration-200">
-                      Start New Test
-                    </button>
-                    <button className="w-full border border-blue-900 text-blue-900 py-2 px-4 rounded-md hover:bg-blue-50 transition-colors duration-200">
-                      View Past Results
-                    </button>
+            {/* Search and Filter Bar */}
+            <div className="bg-white rounded-xl shadow-lg p-6">
+              <div className="flex flex-col md:flex-row gap-4">
+                <div className="flex-1">
+                  <div className="relative">
+                    <input
+                      type="text"
+                      placeholder="Search locations, events, or study groups..."
+                      className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                    <i className="fas fa-search absolute left-4 top-3 text-gray-400"></i>
                   </div>
                 </div>
+                <div className="flex gap-2">
+                  <button className="flex items-center px-4 py-3 bg-blue-900 text-white rounded-lg hover:bg-blue-800">
+                    <i className="fas fa-map-marker-alt mr-2"></i>
+                    Map View
+                  </button>
+                  <button className="flex items-center px-4 py-3 border border-gray-200 rounded-lg hover:bg-gray-50">
+                    <i className="fas fa-filter mr-2"></i>
+                    Filters
+                  </button>
+                </div>
+              </div>
+            </div>
 
-                {/* Problem Sets */}
-                <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-6">
-                  <div className="flex items-start mb-4">
-                    <div className="w-12 h-12 bg-green-700 rounded-lg flex items-center justify-center">
-                      <i className="fas fa-puzzle-piece text-2xl text-white"></i>
-                    </div>
-                    <div className="ml-4">
-                      <h3 className="text-lg font-semibold">Problem Sets</h3>
-                      <p className="text-sm text-gray-600">Course-specific practice problems</p>
+            {/* Map Section - Full Width */}
+            <div className="bg-white rounded-xl shadow-lg p-6">
+              <div className="relative h-[800px] bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg overflow-hidden">
+                {/* Resort-style Map Background */}
+                <div className="absolute inset-0">
+                  {/* Main Path */}
+                  <div className="absolute top-1/2 left-0 w-full h-1 bg-gray-200 transform -translate-y-1/2"></div>
+                  
+                  {/* Side Paths */}
+                  <div className="absolute top-1/4 left-1/4 w-1 h-1/2 bg-gray-200"></div>
+                  <div className="absolute top-1/4 right-1/4 w-1 h-1/2 bg-gray-200"></div>
+                  <div className="absolute bottom-1/4 left-1/3 w-1 h-1/2 bg-gray-200"></div>
+                  <div className="absolute bottom-1/4 right-1/3 w-1 h-1/2 bg-gray-200"></div>
+
+                  {/* Buildings */}
+                  <div className="absolute top-1/4 left-1/4 w-56 h-56 bg-white rounded-xl shadow-lg cursor-pointer hover:shadow-xl transition-shadow duration-200 transform -translate-x-1/2 -translate-y-1/2"
+                       onClick={() => {
+                         const modal = document.getElementById('building-modal');
+                         if (modal) modal.classList.remove('hidden');
+                       }}>
+                    <div className="p-4 h-full flex flex-col">
+                      <div className="w-12 h-12 bg-blue-900 rounded-lg flex items-center justify-center mb-3">
+                        <i className="fas fa-graduation-cap text-white text-2xl"></i>
+                      </div>
+                      <h3 className="text-lg font-semibold mb-1">Main Library</h3>
+                      <p className="text-sm text-gray-600 mb-2">Study Rooms Available</p>
+                      <div className="mt-auto space-y-2">
+                        <div className="flex items-center text-sm text-blue-900">
+                          <i className="fas fa-star mr-1"></i>
+                          <span>4.8 (120 reviews)</span>
+                        </div>
+                        <div className="flex items-center text-sm text-gray-600">
+                          <i className="fas fa-users mr-1"></i>
+                          <span>Capacity: 200</span>
+                        </div>
+                        <div className="flex items-center text-sm text-green-600">
+                          <i className="fas fa-clock mr-1"></i>
+                          <span>Open 24/7</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                  <div className="space-y-3 mt-4">
-                    <div>
-                      <div className="flex justify-between items-center mb-1">
-                        <span className="text-sm text-gray-600">Average Grade</span>
-                        <span className="text-sm font-medium text-green-700">B+</span>
+
+                  <div className="absolute top-1/3 right-1/4 w-56 h-56 bg-white rounded-xl shadow-lg cursor-pointer hover:shadow-xl transition-shadow duration-200 transform translate-x-1/2 -translate-y-1/2"
+                       onClick={() => {
+                         const modal = document.getElementById('building-modal');
+                         if (modal) modal.classList.remove('hidden');
+                       }}>
+                    <div className="p-4 h-full flex flex-col">
+                      <div className="w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center mb-3">
+                        <i className="fas fa-flask text-white text-2xl"></i>
                       </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2">
-                        <div className="bg-green-700 h-2 rounded-full" style={{ width: '45%' }}></div>
+                      <h3 className="text-lg font-semibold mb-1">Science Building</h3>
+                      <p className="text-sm text-gray-600 mb-2">Labs & Research</p>
+                      <div className="mt-auto space-y-2">
+                        <div className="flex items-center text-sm text-blue-900">
+                          <i className="fas fa-star mr-1"></i>
+                          <span>4.9 (95 reviews)</span>
+                        </div>
+                        <div className="flex items-center text-sm text-gray-600">
+                          <i className="fas fa-users mr-1"></i>
+                          <span>Capacity: 150</span>
+                        </div>
+                        <div className="flex items-center text-sm text-green-600">
+                          <i className="fas fa-clock mr-1"></i>
+                          <span>Open 7AM-10PM</span>
+                        </div>
                       </div>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm text-gray-600">Average Difficulty</span>
-                      <div className="flex items-center">
-                        <i className="fas fa-star text-yellow-400"></i>
-                        <i className="fas fa-star text-yellow-400"></i>
-                        <i className="fas fa-star text-yellow-400"></i>
-                        <i className="fas fa-star text-gray-300"></i>
-                        <i className="fas fa-star text-gray-300"></i>
-                      </div>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm text-gray-600">Streak</span>
-                      <span className="text-sm font-medium text-green-700">5 days</span>
                     </div>
                   </div>
-                  <div className="mt-6 space-y-2">
-                    <button className="w-full bg-green-700 text-white py-2 px-4 rounded-md hover:bg-green-800 transition-colors duration-200">
-                      Continue Practice
-                    </button>
-                    <button className="w-full border border-green-700 text-green-700 py-2 px-4 rounded-md hover:bg-green-50 transition-colors duration-200">
-                      View Problem Library
-                    </button>
+
+                  <div className="absolute bottom-1/4 left-1/3 w-56 h-56 bg-white rounded-xl shadow-lg cursor-pointer hover:shadow-xl transition-shadow duration-200 transform -translate-x-1/2 translate-y-1/2"
+                       onClick={() => {
+                         const modal = document.getElementById('building-modal');
+                         if (modal) modal.classList.remove('hidden');
+                       }}>
+                    <div className="p-4 h-full flex flex-col">
+                      <div className="w-12 h-12 bg-purple-600 rounded-lg flex items-center justify-center mb-3">
+                        <i className="fas fa-laptop text-white text-2xl"></i>
+                      </div>
+                      <h3 className="text-lg font-semibold mb-1">Computer Lab</h3>
+                      <p className="text-sm text-gray-600 mb-2">24/7 Access</p>
+                      <div className="mt-auto space-y-2">
+                        <div className="flex items-center text-sm text-blue-900">
+                          <i className="fas fa-star mr-1"></i>
+                          <span>4.7 (150 reviews)</span>
+                        </div>
+                        <div className="flex items-center text-sm text-gray-600">
+                          <i className="fas fa-users mr-1"></i>
+                          <span>Capacity: 100</span>
+                        </div>
+                        <div className="flex items-center text-sm text-green-600">
+                          <i className="fas fa-clock mr-1"></i>
+                          <span>Open 24/7</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="absolute bottom-1/3 right-1/3 w-56 h-56 bg-white rounded-xl shadow-lg cursor-pointer hover:shadow-xl transition-shadow duration-200 transform translate-x-1/2 translate-y-1/2"
+                       onClick={() => {
+                         const modal = document.getElementById('building-modal');
+                         if (modal) modal.classList.remove('hidden');
+                       }}>
+                    <div className="p-4 h-full flex flex-col">
+                      <div className="w-12 h-12 bg-red-600 rounded-lg flex items-center justify-center mb-3">
+                        <i className="fas fa-users text-white text-2xl"></i>
+                      </div>
+                      <h3 className="text-lg font-semibold mb-1">Student Center</h3>
+                      <p className="text-sm text-gray-600 mb-2">Study Groups</p>
+                      <div className="mt-auto space-y-2">
+                        <div className="flex items-center text-sm text-blue-900">
+                          <i className="fas fa-star mr-1"></i>
+                          <span>4.6 (200 reviews)</span>
+                        </div>
+                        <div className="flex items-center text-sm text-gray-600">
+                          <i className="fas fa-users mr-1"></i>
+                          <span>Capacity: 300</span>
+                        </div>
+                        <div className="flex items-center text-sm text-green-600">
+                          <i className="fas fa-clock mr-1"></i>
+                          <span>Open 8AM-11PM</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="absolute top-1/2 left-1/2 w-48 h-48 bg-white rounded-xl shadow-lg cursor-pointer hover:shadow-xl transition-shadow duration-200 transform -translate-x-1/2 -translate-y-1/2"
+                       onClick={() => {
+                         const modal = document.getElementById('building-modal');
+                         if (modal) modal.classList.remove('hidden');
+                       }}>
+                    <div className="p-4 h-full flex flex-col">
+                      <div className="w-10 h-10 bg-yellow-500 rounded-lg flex items-center justify-center mb-3">
+                        <i className="fas fa-coffee text-white text-xl"></i>
+                      </div>
+                      <h3 className="text-lg font-semibold mb-1">Café</h3>
+                      <p className="text-sm text-gray-600 mb-2">Study & Refresh</p>
+                      <div className="mt-auto space-y-2">
+                        <div className="flex items-center text-sm text-blue-900">
+                          <i className="fas fa-star mr-1"></i>
+                          <span>4.5 (180 reviews)</span>
+                        </div>
+                        <div className="flex items-center text-sm text-green-600">
+                          <i className="fas fa-clock mr-1"></i>
+                          <span>Open 7AM-9PM</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="absolute top-1/4 left-1/2 w-48 h-48 bg-white rounded-xl shadow-lg cursor-pointer hover:shadow-xl transition-shadow duration-200 transform -translate-x-1/2 -translate-y-1/2"
+                       onClick={() => {
+                         const modal = document.getElementById('building-modal');
+                         if (modal) modal.classList.remove('hidden');
+                       }}>
+                    <div className="p-4 h-full flex flex-col">
+                      <div className="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center mb-3">
+                        <i className="fas fa-book text-white text-xl"></i>
+                      </div>
+                      <h3 className="text-lg font-semibold mb-1">Study Hall</h3>
+                      <p className="text-sm text-gray-600 mb-2">Quiet Study Area</p>
+                      <div className="mt-auto space-y-2">
+                        <div className="flex items-center text-sm text-blue-900">
+                          <i className="fas fa-star mr-1"></i>
+                          <span>4.7 (90 reviews)</span>
+                        </div>
+                        <div className="flex items-center text-sm text-green-600">
+                          <i className="fas fa-clock mr-1"></i>
+                          <span>Open 6AM-12AM</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'courses' && (
+          <div className="space-y-6">
+            {/* Onboarding Section */}
+            <div className="bg-white rounded-xl shadow-lg p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-2xl font-serif text-gray-900">Onboarding Progress</h2>
+                <div className="flex items-center space-x-2">
+                  <span className="text-sm text-gray-600">Current Day:</span>
+                  <span className="px-3 py-1 bg-blue-100 text-blue-900 rounded-full text-sm font-medium">A Day</span>
+                </div>
+              </div>
+              <div className="grid grid-cols-3 gap-4">
+                <div className="bg-blue-50 rounded-lg p-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="font-medium">Orientation</h3>
+                    <span className="text-green-600 text-sm">Completed</span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div className="bg-green-500 h-2 rounded-full" style={{ width: '100%' }}></div>
+                  </div>
+                </div>
+                <div className="bg-blue-50 rounded-lg p-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="font-medium">Course Setup</h3>
+                    <span className="text-blue-600 text-sm">In Progress</span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div className="bg-blue-500 h-2 rounded-full" style={{ width: '75%' }}></div>
+                  </div>
+                </div>
+                <div className="bg-blue-50 rounded-lg p-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="font-medium">Resource Access</h3>
+                    <span className="text-yellow-600 text-sm">Pending</span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div className="bg-yellow-500 h-2 rounded-full" style={{ width: '25%' }}></div>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Certifications & Licenses */}
-            <div className="bg-white rounded-lg shadow-lg p-6 mt-6">
+            {/* Daily Schedule */}
+            <div className="bg-white rounded-xl shadow-lg p-6">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-serif text-gray-900">Certifications & Licenses</h2>
-                <button 
-                  className="flex items-center px-4 py-2 bg-blue-900 text-white rounded-md hover:bg-blue-800 transition-colors duration-200"
-                  onClick={() => document.getElementById('coursera-modal').classList.remove('hidden')}
-                >
-                  <i className="fas fa-external-link-alt mr-2"></i>
-                  Browse Coursera Courses
-                </button>
-              </div>
-              <div className="bg-gradient-to-br from-orange-50 to-orange-100 rounded-lg p-6">
-                <div className="flex items-start mb-4">
-                  <div className="w-12 h-12 bg-orange-600 rounded-lg flex items-center justify-center">
-                    <i className="fas fa-certificate text-2xl text-white"></i>
-                  </div>
-                  <div className="ml-4">
-                    <h3 className="text-lg font-semibold">Professional Credentials</h3>
-                    <p className="text-sm text-gray-600">Track your professional qualifications</p>
-                  </div>
+                <div>
+                  <h2 className="text-2xl font-serif text-gray-900">Today's Schedule</h2>
+                  <p className="text-sm text-gray-600">April 15, 2024 - A Day</p>
                 </div>
-                <div className="space-y-3 mt-4">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">In Progress</span>
-                    <span className="text-sm font-medium text-orange-600">3</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Completed</span>
-                    <span className="text-sm font-medium text-orange-600">5</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Next Exam</span>
-                    <span className="text-sm font-medium text-orange-600">May 15</span>
-                  </div>
-                </div>
-                <div className="mt-6 space-y-2">
-                  <button className="w-full bg-orange-600 text-white py-2 px-4 rounded-md hover:bg-orange-700 transition-colors duration-200">
-                    View Certifications
+                <div className="flex items-center space-x-4">
+                  <button className="px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50">
+                    <i className="fas fa-chevron-left"></i>
                   </button>
-                  <button className="w-full border border-orange-600 text-orange-600 py-2 px-4 rounded-md hover:bg-orange-50 transition-colors duration-200">
-                    Schedule Exam
+                  <button className="px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50">
+                    <i className="fas fa-chevron-right"></i>
                   </button>
                 </div>
               </div>
-            </div>
 
-            {/* Coursera Courses Modal */}
-            <div id="coursera-modal" className="fixed inset-0 bg-black bg-opacity-50 hidden">
-              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] overflow-hidden">
-                <div className="flex items-center justify-between p-6 border-b border-gray-200">
-                  <h3 className="text-2xl font-serif text-gray-900">Coursera Courses</h3>
-                  <button 
-                    className="text-gray-500 hover:text-gray-700"
-                    onClick={() => document.getElementById('coursera-modal').classList.add('hidden')}
-                  >
-                    <i className="fas fa-times text-xl"></i>
-                  </button>
-                </div>
-                <div className="p-6 overflow-y-auto max-h-[calc(90vh-80px)]">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/* Course Card 1 */}
-                    <div className="border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-200">
-                      <div className="relative h-48">
-                        <img 
-                          src="/images/courses/google-data-analytics.jpg" 
-                          alt="Google Data Analytics" 
-                          className="w-full h-full object-cover"
-                        />
-                        <div className="absolute top-2 right-2">
-                          <span className="bg-blue-900 text-white text-xs px-2 py-1 rounded">Professional Certificate</span>
-                        </div>
-                      </div>
-                      <div className="p-4">
-                        <h4 className="font-semibold text-lg mb-2">Google Data Analytics</h4>
-                        <p className="text-sm text-gray-600 mb-4">Learn data analysis and visualization skills</p>
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm text-gray-500">8 months</span>
-                          <button className="text-blue-900 hover:text-blue-700 text-sm">
-                            View Course
-                          </button>
-                        </div>
-                      </div>
+              {/* Schedule Grid */}
+              <div className="grid grid-cols-1 gap-4">
+                {/* Time Slots */}
+                {[
+                  { time: '8:00 AM', course: 'Data Analysis & Statistics', room: '302', duration: '2h' },
+                  { time: '10:00 AM', course: 'Business Analytics', room: '405', duration: '2h' },
+                  { time: '12:00 PM', course: 'Lunch Break', room: 'Cafeteria', duration: '1h' },
+                  { time: '1:00 PM', course: 'Study Period', room: 'Library', duration: '1h' },
+                  { time: '2:00 PM', course: 'Lab Session', room: 'Computer Lab', duration: '2h' },
+                  { time: '4:00 PM', course: 'Office Hours', room: 'Faculty Office', duration: '1h' }
+                ].map((slot, index) => (
+                  <div key={index} className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors duration-200">
+                    <div className="w-24 text-sm font-medium text-gray-900">{slot.time}</div>
+                    <div className="flex-1">
+                      <h3 className="font-medium text-gray-900">{slot.course}</h3>
+                      <p className="text-sm text-gray-600">Room {slot.room}</p>
                     </div>
-
-                    {/* Course Card 2 */}
-                    <div className="border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-200">
-                      <div className="relative h-48">
-                        <img 
-                          src="/images/courses/ibm-data-science.jpg" 
-                          alt="IBM Data Science" 
-                          className="w-full h-full object-cover"
-                        />
-                        <div className="absolute top-2 right-2">
-                          <span className="bg-blue-900 text-white text-xs px-2 py-1 rounded">Professional Certificate</span>
-                        </div>
-                      </div>
-                      <div className="p-4">
-                        <h4 className="font-semibold text-lg mb-2">IBM Data Science</h4>
-                        <p className="text-sm text-gray-600 mb-4">Master data science and machine learning</p>
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm text-gray-500">10 months</span>
-                          <button className="text-blue-900 hover:text-blue-700 text-sm">
-                            View Course
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Course Card 3 */}
-                    <div className="border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-200">
-                      <div className="relative h-48">
-                        <img 
-                          src="/images/courses/meta-frontend.jpg" 
-                          alt="Meta Front-End Development" 
-                          className="w-full h-full object-cover"
-                        />
-                        <div className="absolute top-2 right-2">
-                          <span className="bg-blue-900 text-white text-xs px-2 py-1 rounded">Professional Certificate</span>
-                        </div>
-                      </div>
-                      <div className="p-4">
-                        <h4 className="font-semibold text-lg mb-2">Meta Front-End Development</h4>
-                        <p className="text-sm text-gray-600 mb-4">Become a front-end developer</p>
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm text-gray-500">7 months</span>
-                          <button className="text-blue-900 hover:text-blue-700 text-sm">
-                            View Course
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Course Card 4 */}
-                    <div className="border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-200">
-                      <div className="relative h-48">
-                        <img 
-                          src="/images/courses/google-ux-design.jpg" 
-                          alt="Google UX Design" 
-                          className="w-full h-full object-cover"
-                        />
-                        <div className="absolute top-2 right-2">
-                          <span className="bg-blue-900 text-white text-xs px-2 py-1 rounded">Professional Certificate</span>
-                        </div>
-                      </div>
-                      <div className="p-4">
-                        <h4 className="font-semibold text-lg mb-2">Google UX Design</h4>
-                        <p className="text-sm text-gray-600 mb-4">Learn user experience design principles</p>
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm text-gray-500">6 months</span>
-                          <button className="text-blue-900 hover:text-blue-700 text-sm">
-                            View Course
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="p-6 border-t border-gray-200">
-                  <button className="w-full bg-blue-900 text-white py-2 px-4 rounded-md hover:bg-blue-800 transition-colors duration-200">
-                    View All Courses
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* Games */}
-            <div className="bg-white rounded-lg shadow-lg p-6 mt-6">
-              <h2 className="text-2xl font-serif text-gray-900 mb-6">Games</h2>
-              <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-6">
-                <div className="flex items-start mb-4">
-                  <div className="w-12 h-12 bg-purple-700 rounded-lg flex items-center justify-center">
-                    <i className="fas fa-gamepad text-2xl text-white"></i>
-                  </div>
-                  <div className="ml-4">
-                    <h3 className="text-lg font-semibold">Learning Games</h3>
-                    <p className="text-sm text-gray-600">Track your progress and achievements</p>
-                  </div>
-                </div>
-                <div className="space-y-3 mt-4">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Current Accuracy</span>
-                    <span className="text-sm font-medium text-purple-700">85%</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Time Spent</span>
-                    <span className="text-sm font-medium text-purple-700">12.5 hrs</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Mastery Level</span>
-                    <span className="text-sm font-medium text-purple-700">Advanced</span>
-                  </div>
-                </div>
-                <div className="mt-6 space-y-2">
-                  <button className="w-full bg-purple-700 text-white py-2 px-4 rounded-md hover:bg-purple-800 transition-colors duration-200">
-                    View Detailed Analytics
-                  </button>
-                  <button className="w-full border border-purple-700 text-purple-700 py-2 px-4 rounded-md hover:bg-purple-50 transition-colors duration-200">
-                    Download Report
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* Virtual Classrooms */}
-            <div className="bg-white rounded-lg shadow-lg p-6">
-              <h2 className="text-2xl font-serif text-gray-900 mb-6">Virtual Classrooms</h2>
-              <div className="grid grid-cols-4 gap-4">
-                {categories.map((category) => (
-                  <div key={category.title} className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200">
-                    {/* Course Artwork */}
-                    <div className="relative h-32 w-full overflow-hidden rounded-t-lg">
-                      <img 
-                        src={`/images/courses/${category.title.toLowerCase().replace(/\s+/g, '-')}.jpg`}
-                        alt={`${category.title} course artwork`}
-                        className="w-full h-full object-cover"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-                      <div className="absolute bottom-2 left-2">
-                        <span className="text-xs text-white bg-blue-900/80 px-2 py-1 rounded">
-                          {category.level}
-                        </span>
-                      </div>
-                    </div>
-                    <div className="p-4">
-                      {/* Course Header */}
-                      <div className="flex flex-col mb-3">
-                        <div className="flex items-center mb-2">
-                          <i className={`${category.iconClass} text-xl text-blue-900 mr-3`}></i>
-                          <div>
-                            <h3 className="text-lg font-semibold text-gray-900">{category.title}</h3>
-                          </div>
-                        </div>
-                        <div>
-                          <p className="text-sm font-medium text-gray-600">Next Session</p>
-                          <p className="text-sm text-blue-900">{category.nextSession}</p>
-                        </div>
-                      </div>
-
-                      {/* Instructor Info */}
-                      <div className="flex items-center mb-3 pb-2 border-b border-gray-200">
-                        <i className="fas fa-user-tie text-gray-400 mr-2"></i>
-                        <span className="text-sm text-gray-600">Instructor: {category.instructor}</span>
-                      </div>
-
-                      {/* Progress Bar */}
-                      <div className="mb-3">
-                        <div className="flex justify-between items-center mb-1">
-                          <span className="text-sm font-medium text-gray-700">Course Progress</span>
-                          <span className="text-sm font-medium text-gray-700">{category.progress}%</span>
-                        </div>
-                        <div className="w-full bg-gray-200 rounded-full h-1.5">
-                          <div 
-                            className="bg-blue-900 h-1.5 rounded-full transition-all duration-300" 
-                            style={{ width: `${category.progress}%` }}
-                          ></div>
-                        </div>
-                      </div>
-
-                      {/* Course Materials */}
-                      <div className="mb-3">
-                        <h4 className="text-sm font-semibold text-gray-700 mb-1">Current Materials</h4>
-                        <div className="space-y-1">
-                          {category.materials?.map((material, index) => (
-                            <div key={index} className="flex items-center text-xs">
-                              <i className="fas fa-file-alt text-gray-400 mr-1"></i>
-                              <a href="#" className="text-blue-900 hover:text-blue-700 truncate">{material}</a>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Action Buttons */}
-                      <div className="flex justify-end space-x-2">
-                        <button 
-                          className="flex items-center px-3 py-1.5 bg-green-600 text-white text-sm rounded-md hover:bg-green-700 transition-colors duration-200"
-                          onClick={() => window.open(category.meetLink, '_blank')}
-                        >
-                          <i className="fas fa-video mr-1"></i>
-                          Join Meet
-                        </button>
-                        <button className="flex items-center px-3 py-1.5 bg-blue-900 text-white text-sm rounded-md hover:bg-blue-800 transition-colors duration-200">
-                          <i className="fas fa-chalkboard-teacher mr-1"></i>
-                          Enter Class
-                        </button>
-                      </div>
+                    <div className="flex items-center space-x-4">
+                      <span className="text-sm text-gray-600">{slot.duration}</span>
+                      <button className="p-2 text-gray-400 hover:text-blue-900">
+                        <i className="fas fa-info-circle"></i>
+                      </button>
                     </div>
                   </div>
                 ))}
+              </div>
+
+              {/* Day Rotation Info */}
+              <div className="mt-6 pt-6 border-t border-gray-200">
+                <h3 className="text-lg font-medium text-gray-900 mb-4">Day Rotation Schedule</h3>
+                <div className="grid grid-cols-3 gap-4">
+                  <div className="bg-blue-50 rounded-lg p-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <h4 className="font-medium">A Day</h4>
+                      <span className="text-sm text-blue-900">Current</span>
+                    </div>
+                    <ul className="text-sm text-gray-600 space-y-1">
+                      <li>• Data Analysis & Statistics</li>
+                      <li>• Business Analytics</li>
+                      <li>• Lab Session</li>
+                    </ul>
+                  </div>
+                  <div className="bg-gray-50 rounded-lg p-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <h4 className="font-medium">B Day</h4>
+                      <span className="text-sm text-gray-600">Next</span>
+                    </div>
+                    <ul className="text-sm text-gray-600 space-y-1">
+                      <li>• Actuarial Sciences</li>
+                      <li>• Microsoft Office</li>
+                      <li>• Research Lab</li>
+                    </ul>
+                  </div>
+                  <div className="bg-gray-50 rounded-lg p-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <h4 className="font-medium">C Day</h4>
+                      <span className="text-sm text-gray-600">Following</span>
+                    </div>
+                    <ul className="text-sm text-gray-600 space-y-1">
+                      <li>• Advanced Programming</li>
+                      <li>• Data Structures</li>
+                      <li>• Project Work</li>
+                    </ul>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -1349,6 +1342,404 @@ export default function Dashboard() {
                     <button className="bg-blue-900 text-white rounded-lg p-3 hover:bg-blue-800 transition-colors duration-200">
                       <i className="fas fa-paper-plane"></i>
                     </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'resume' && (
+          <div className="space-y-6">
+            {/* Professional Portfolio */}
+            <div className="bg-white rounded-xl shadow-lg p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-serif text-gray-900">Professional Portfolio</h2>
+                <button className="text-blue-900 hover:text-blue-700">
+                  <i className="fas fa-download"></i>
+                </button>
+              </div>
+              <div className="space-y-6">
+                {/* Professional Photo and Contact Info */}
+                <div className="flex items-start space-x-6 border-b border-gray-200 pb-6">
+                  <div className="w-32 h-32 rounded-lg overflow-hidden">
+                    <img 
+                      src="/images/profile/professional.jpg" 
+                      alt="Professional Photo"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-lg font-semibold mb-2">John Student</h3>
+                    <p className="text-sm text-gray-600 mb-4">Senior Computer Science Student</p>
+                    <div className="grid grid-cols-2 gap-4 text-sm">
+                      <div className="flex items-center">
+                        <i className="fas fa-envelope text-blue-900 w-5"></i>
+                        <span className="ml-2">john.student@university.edu</span>
+                      </div>
+                      <div className="flex items-center">
+                        <i className="fas fa-phone text-blue-900 w-5"></i>
+                        <span className="ml-2">(555) 123-4567</span>
+                      </div>
+                      <div className="flex items-center">
+                        <i className="fas fa-map-marker-alt text-blue-900 w-5"></i>
+                        <span className="ml-2">San Francisco, CA</span>
+                      </div>
+                      <div className="flex items-center">
+                        <i className="fab fa-linkedin text-blue-900 w-5"></i>
+                        <span className="ml-2">linkedin.com/in/johnstudent</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Professional Summary */}
+                <div className="border-b border-gray-200 pb-4">
+                  <h3 className="text-lg font-semibold mb-2">Professional Summary</h3>
+                  <p className="text-sm text-gray-600">
+                    Senior Computer Science student with a strong focus on data science and cloud computing. 
+                    Proven track record in competitive programming and hackathons. 
+                    Certified professional in Microsoft and AWS technologies.
+                  </p>
+                </div>
+
+                {/* Work History */}
+                <div className="border-b border-gray-200 pb-4">
+                  <h3 className="text-lg font-semibold mb-3">Work History</h3>
+                  <div className="space-y-4">
+                    <div className="bg-gray-50 rounded-lg p-4">
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center space-x-3">
+                          <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                            <i className="fas fa-briefcase text-blue-900"></i>
+                          </div>
+                          <div>
+                            <h4 className="font-medium">Software Engineering Intern</h4>
+                            <p className="text-sm text-gray-600">Tech Solutions Inc.</p>
+                          </div>
+                        </div>
+                        <span className="text-sm text-gray-600">Jun 2023 - Present</span>
+                      </div>
+                      <div className="mt-2 text-xs text-gray-600">
+                        <p>• Developed and maintained cloud-based applications using AWS services</p>
+                        <p>• Implemented machine learning models for data analysis</p>
+                        <p>• Collaborated with cross-functional teams on agile development projects</p>
+                      </div>
+                    </div>
+
+                    <div className="bg-gray-50 rounded-lg p-4">
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center space-x-3">
+                          <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                            <i className="fas fa-laptop-code text-green-900"></i>
+                          </div>
+                          <div>
+                            <h4 className="font-medium">Research Assistant</h4>
+                            <p className="text-sm text-gray-600">University AI Lab</p>
+                          </div>
+                        </div>
+                        <span className="text-sm text-gray-600">Jan 2023 - May 2023</span>
+                      </div>
+                      <div className="mt-2 text-xs text-gray-600">
+                        <p>• Conducted research on machine learning algorithms</p>
+                        <p>• Published findings in academic journals</p>
+                        <p>• Presented research at national conferences</p>
+                      </div>
+                    </div>
+
+                    <div className="bg-gray-50 rounded-lg p-4">
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center space-x-3">
+                          <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                            <i className="fas fa-code text-purple-900"></i>
+                          </div>
+                          <div>
+                            <h4 className="font-medium">Freelance Developer</h4>
+                            <p className="text-sm text-gray-600">Self-Employed</p>
+                          </div>
+                        </div>
+                        <span className="text-sm text-gray-600">Sep 2022 - Dec 2022</span>
+                      </div>
+                      <div className="mt-2 text-xs text-gray-600">
+                        <p>• Built custom web applications for small businesses</p>
+                        <p>• Implemented responsive designs and modern UI/UX</p>
+                        <p>• Managed client relationships and project timelines</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Certifications */}
+                <div className="border-b border-gray-200 pb-4">
+                  <h3 className="text-lg font-semibold mb-3">Professional Certifications</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="bg-blue-50 rounded-lg p-4">
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                          <i className="fas fa-certificate text-blue-900"></i>
+                        </div>
+                        <span className="text-sm text-blue-900">Issued: Mar 2024</span>
+                      </div>
+                      <h4 className="font-medium">Data Science Professional</h4>
+                      <p className="text-sm text-gray-600">Microsoft Certified</p>
+                      <div className="mt-2 text-xs text-gray-500">
+                        <p>• Advanced data analysis and visualization</p>
+                        <p>• Machine learning implementation</p>
+                        <p>• Big data processing</p>
+                      </div>
+                    </div>
+                    <div className="bg-green-50 rounded-lg p-4">
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                          <i className="fas fa-cloud text-green-900"></i>
+                        </div>
+                        <span className="text-sm text-green-900">Issued: Feb 2024</span>
+                      </div>
+                      <h4 className="font-medium">Cloud Computing</h4>
+                      <p className="text-sm text-gray-600">AWS Certified</p>
+                      <div className="mt-2 text-xs text-gray-500">
+                        <p>• Cloud architecture design</p>
+                        <p>• Serverless computing</p>
+                        <p>• Cloud security implementation</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Competition Achievements */}
+                <div>
+                  <h3 className="text-lg font-semibold mb-3">Competition Achievements</h3>
+                  <div className="space-y-4">
+                    <div className="bg-yellow-50 rounded-lg p-4">
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center space-x-3">
+                          <div className="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center">
+                            <i className="fas fa-trophy text-yellow-900"></i>
+                          </div>
+                          <div>
+                            <h4 className="font-medium">Hackathon Winner</h4>
+                            <p className="text-sm text-gray-600">Spring 2024</p>
+                          </div>
+                        </div>
+                        <span className="text-sm font-bold text-yellow-900">1st Place</span>
+                      </div>
+                      <div className="mt-2 text-xs text-gray-600">
+                        <p>• Developed an AI-powered educational platform</p>
+                        <p>• Implemented real-time collaboration features</p>
+                        <p>• Awarded for innovation and technical excellence</p>
+                      </div>
+                    </div>
+
+                    <div className="bg-purple-50 rounded-lg p-4">
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center space-x-3">
+                          <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                            <i className="fas fa-medal text-purple-900"></i>
+                          </div>
+                          <div>
+                            <h4 className="font-medium">Coding Competition</h4>
+                            <p className="text-sm text-gray-600">Winter 2024</p>
+                          </div>
+                        </div>
+                        <span className="text-sm font-bold text-purple-900">2nd Place</span>
+                      </div>
+                      <div className="mt-2 text-xs text-gray-600">
+                        <p>• Advanced algorithms implementation</p>
+                        <p>• Optimized solution design</p>
+                        <p>• Team leadership and coordination</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Skills & Expertise */}
+                <div className="border-t border-gray-200 pt-4">
+                  <h3 className="text-lg font-semibold mb-3">Technical Expertise</h3>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <h4 className="text-sm font-medium text-gray-900 mb-2">Programming Languages</h4>
+                      <div className="flex flex-wrap gap-2">
+                        <span className="px-2 py-1 bg-blue-100 text-blue-900 rounded-full text-xs">Python</span>
+                        <span className="px-2 py-1 bg-blue-100 text-blue-900 rounded-full text-xs">JavaScript</span>
+                        <span className="px-2 py-1 bg-blue-100 text-blue-900 rounded-full text-xs">Java</span>
+                        <span className="px-2 py-1 bg-blue-100 text-blue-900 rounded-full text-xs">C++</span>
+                      </div>
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-medium text-gray-900 mb-2">Technologies</h4>
+                      <div className="flex flex-wrap gap-2">
+                        <span className="px-2 py-1 bg-green-100 text-green-900 rounded-full text-xs">AWS</span>
+                        <span className="px-2 py-1 bg-green-100 text-green-900 rounded-full text-xs">Azure</span>
+                        <span className="px-2 py-1 bg-green-100 text-green-900 rounded-full text-xs">Docker</span>
+                        <span className="px-2 py-1 bg-green-100 text-green-900 rounded-full text-xs">Kubernetes</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'agenda' && (
+          <div className="space-y-6">
+            {/* Agenda Header */}
+            <div className="bg-white rounded-xl shadow-lg p-6">
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h2 className="text-2xl font-serif text-gray-900">My Agenda</h2>
+                  <p className="text-sm text-gray-600">April 15, 2024</p>
+                </div>
+                <div className="flex items-center space-x-4">
+                  <button className="px-4 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-800">
+                    <i className="fas fa-plus mr-2"></i>
+                    Add Event
+                  </button>
+                  <button className="px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50">
+                    <i className="fas fa-calendar-alt mr-2"></i>
+                    Calendar View
+                  </button>
+                </div>
+              </div>
+
+              {/* Quick Stats */}
+              <div className="grid grid-cols-4 gap-4 mb-6">
+                <div className="bg-blue-50 rounded-lg p-4">
+                  <div className="text-2xl font-bold text-blue-900">12</div>
+                  <div className="text-sm text-gray-600">Upcoming Events</div>
+                </div>
+                <div className="bg-green-50 rounded-lg p-4">
+                  <div className="text-2xl font-bold text-green-900">4</div>
+                  <div className="text-sm text-gray-600">Today's Classes</div>
+                </div>
+                <div className="bg-purple-50 rounded-lg p-4">
+                  <div className="text-2xl font-bold text-purple-900">2</div>
+                  <div className="text-sm text-gray-600">Study Groups</div>
+                </div>
+                <div className="bg-yellow-50 rounded-lg p-4">
+                  <div className="text-2xl font-bold text-yellow-900">3</div>
+                  <div className="text-sm text-gray-600">Private Events</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Main Content Grid */}
+            <div className="grid grid-cols-3 gap-6">
+              {/* Left Column - Today's Schedule */}
+              <div className="col-span-2 space-y-6">
+                {/* Today's Events */}
+                <div className="bg-white rounded-xl shadow-lg p-6">
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">Today's Schedule</h3>
+                  <div className="space-y-4">
+                    {[
+                      { time: '8:00 AM', title: 'Data Analysis & Statistics', type: 'class', location: 'Room 302', duration: '2h' },
+                      { time: '10:00 AM', title: 'Business Analytics', type: 'class', location: 'Room 405', duration: '2h' },
+                      { time: '12:00 PM', title: 'Lunch with Study Group', type: 'study', location: 'Cafeteria', duration: '1h' },
+                      { time: '2:00 PM', title: 'Lab Session', type: 'lab', location: 'Computer Lab', duration: '2h' },
+                      { time: '4:00 PM', title: 'Office Hours', type: 'meeting', location: 'Faculty Office', duration: '1h' }
+                    ].map((event, index) => (
+                      <div key={index} className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors duration-200">
+                        <div className="w-24 text-sm font-medium text-gray-900">{event.time}</div>
+                        <div className="flex-1">
+                          <h4 className="font-medium text-gray-900">{event.title}</h4>
+                          <p className="text-sm text-gray-600">{event.location}</p>
+                        </div>
+                        <div className="flex items-center space-x-4">
+                          <span className={`px-2 py-1 rounded-full text-xs ${
+                            event.type === 'class' ? 'bg-blue-100 text-blue-900' :
+                            event.type === 'study' ? 'bg-green-100 text-green-900' :
+                            event.type === 'lab' ? 'bg-purple-100 text-purple-900' :
+                            'bg-yellow-100 text-yellow-900'
+                          }`}>
+                            {event.type}
+                          </span>
+                          <span className="text-sm text-gray-600">{event.duration}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Upcoming Events */}
+                <div className="bg-white rounded-xl shadow-lg p-6">
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">Upcoming Events</h3>
+                  <div className="space-y-4">
+                    {[
+                      { date: 'Apr 16', title: 'Advanced Programming Workshop', type: 'workshop', price: '$49.99' },
+                      { date: 'Apr 17', title: 'Data Science Meetup', type: 'meetup', price: 'Free' },
+                      { date: 'Apr 18', title: 'Cloud Computing Certification', type: 'certification', price: '$199.99' }
+                    ].map((event, index) => (
+                      <div key={index} className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors duration-200">
+                        <div className="w-16 text-center">
+                          <div className="text-sm font-medium text-gray-900">{event.date}</div>
+                        </div>
+                        <div className="flex-1">
+                          <h4 className="font-medium text-gray-900">{event.title}</h4>
+                          <p className="text-sm text-gray-600">{event.type}</p>
+                        </div>
+                        <div className="flex items-center space-x-4">
+                          <span className="text-sm font-medium text-gray-900">{event.price}</span>
+                          <button className="px-3 py-1 bg-blue-900 text-white rounded-lg hover:bg-blue-800 text-sm">
+                            Register
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Column - Course Marketplace */}
+              <div className="space-y-6">
+                {/* Featured Courses */}
+                <div className="bg-white rounded-xl shadow-lg p-6">
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">Featured Courses</h3>
+                  <div className="space-y-4">
+                    {[
+                      { title: 'Advanced Data Science', instructor: 'Dr. Sarah Johnson', price: '$299.99', rating: 4.8 },
+                      { title: 'Cloud Architecture', instructor: 'Prof. Michael Chen', price: '$249.99', rating: 4.9 },
+                      { title: 'Machine Learning', instructor: 'Dr. Robert Martinez', price: '$349.99', rating: 4.7 }
+                    ].map((course, index) => (
+                      <div key={index} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow duration-200">
+                        <h4 className="font-medium text-gray-900 mb-1">{course.title}</h4>
+                        <p className="text-sm text-gray-600 mb-2">{course.instructor}</p>
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center">
+                            <i className="fas fa-star text-yellow-400 mr-1"></i>
+                            <span className="text-sm text-gray-600">{course.rating}</span>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <span className="text-sm font-medium text-gray-900">{course.price}</span>
+                            <button className="px-3 py-1 bg-blue-900 text-white rounded-lg hover:bg-blue-800 text-sm">
+                              Enroll
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Private Events */}
+                <div className="bg-white rounded-xl shadow-lg p-6">
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">Private Events</h3>
+                  <div className="space-y-4">
+                    {[
+                      { title: 'Study Group Meeting', date: 'Apr 16, 2:00 PM', members: 5 },
+                      { title: 'Project Discussion', date: 'Apr 17, 3:00 PM', members: 3 },
+                      { title: 'Research Collaboration', date: 'Apr 18, 4:00 PM', members: 4 }
+                    ].map((event, index) => (
+                      <div key={index} className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors duration-200">
+                        <div className="flex-1">
+                          <h4 className="font-medium text-gray-900">{event.title}</h4>
+                          <p className="text-sm text-gray-600">{event.date}</p>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <i className="fas fa-users text-gray-400"></i>
+                          <span className="text-sm text-gray-600">{event.members} members</span>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
